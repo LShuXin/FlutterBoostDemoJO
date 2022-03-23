@@ -1,5 +1,6 @@
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    // repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
     repositories {
         google()
         mavenCentral()
@@ -8,3 +9,11 @@ dependencyResolutionManagement {
 }
 rootProject.name = "AndroidDemo"
 include ':app'
+
+setBinding(new Binding([gradle: this]))
+evaluate(new File(
+        settingsDir.parentFile,
+        'flutter_library/.android/include_flutter.groovy'
+))
+include ':flutter_library'
+project(':flutter_library').projectDir = new File('../flutter_library')

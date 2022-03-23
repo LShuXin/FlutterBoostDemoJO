@@ -3,6 +3,7 @@
     package="com.lsx.androiddemo">
 
     <application
+        android:name="com.lsx.androiddemo.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -20,6 +21,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.idlefish.flutterboost.containers.FlutterBoostActivity"
+            android:theme="@style/Theme.AppCompat"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustResize" >
+        </activity>
+        <meta-data android:name="flutterEmbedding"
+            android:value="2">
+        </meta-data>
+
+
     </application>
 
 </manifest>
