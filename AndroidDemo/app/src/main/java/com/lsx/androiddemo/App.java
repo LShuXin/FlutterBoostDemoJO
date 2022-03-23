@@ -18,7 +18,7 @@ public class App extends Application {
             @Override
             public void pushNativeRoute(FlutterBoostRouteOptions options) {
                 //这里根据options.pageName来判断你想跳转哪个页面，这里简单给一个
-                Intent intent = new Intent(FlutterBoost.instance().currentActivity(), YourTargetAcitvity.class);
+                Intent intent = new Intent(FlutterBoost.instance().currentActivity(), MainActivity.class);
                 FlutterBoost.instance().currentActivity().startActivityForResult(intent, options.requestCode());
             }
 
@@ -33,7 +33,6 @@ public class App extends Application {
                         .build(FlutterBoost.instance().currentActivity());
                 FlutterBoost.instance().currentActivity().startActivity(intent);
             }
-        }, engine -> {
-        });
+        }, engine -> {});
     }
 }
