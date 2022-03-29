@@ -1,16 +1,116 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boost/flutter_boost.dart';
+import './case/bottom_navigation_bar_demo.dart';
+import './case/flutter_to_flutter_sample.dart';
+import './case/image_pick.dart';
+import './case/media_query.dart';
+import './case/native_view_demo.dart';
+import './case/platform_view_perf.dart';
+import './case/popUntil.dart';
+import './case/return_data.dart';
+import './case/selection_screen.dart';
+import './case/state_restoration.dart';
+import './case/system_ui_overlay_style.dart';
+import './case/transparent_widget.dart';
+import './case/radial_hero_animation.dart';
+import './case/webview_flutter_demo.dart';
+import './case/willpop.dart';
+import './case/flutter_page.dart';
+import './case/simple_page_widgets.dart';
+import './case/simple_widget.dart';
+import './case/flutter_rebuild_demo.dart';
 
 void main() {
-  ///这里的CustomFlutterBinding调用务必不可缺少，用于控制Boost状态的resume和pause
+  PageVisibilityBinding.instance.addGlobalObserver(AppGlobalPageVisibilityObserver());
   CustomFlutterBinding();
   runApp(MyApp());
 }
 
+class AppGlobalPageVisibilityObserver extends GlobalPageVisibilityObserver {
+  @override
+  void onPagePush(Route<dynamic> route) {
+    Logger.log('boost_lifecycle: AppGlobalPageVisibilityObserver.onPageCreate route:${route.settings.name}');
+  }
 
-///创建一个自定义的Binding，继承和with的关系如下，里面什么都不用写
+  @override
+  void onPageShow(Route<dynamic> route) {
+    Logger.log('boost_lifecycle: AppGlobalPageVisibilityObserver.onPageShow route:${route.settings.name}');
+  }
+
+  @override
+  void onPageHide(Route<dynamic> route) {
+    Logger.log('boost_lifecycle: AppGlobalPageVisibilityObserver.onPageHide route:${route.settings.name}');
+  }
+
+  @override
+  void onPagePop(Route<dynamic> route) {
+    Logger.log('boost_lifecycle: AppGlobalPageVisibilityObserver.onPageDestroy route:${route.settings.name}');
+  }
+
+  @override
+  void onForeground(Route route) {
+    Logger.log('boost_lifecycle: AppGlobalPageVisibilityObserver.onForeground route:${route.settings.name}');
+  }
+
+  @override
+  void onBackground(Route<dynamic> route) {
+    Logger.log('boost_lifecycle: AppGlobalPageVisibilityObserver.onBackground route:${route.settings.name}');
+  }
+}
+
 class CustomFlutterBinding extends WidgetsFlutterBinding with BoostFlutterBinding {}
+
+class CustomInterceptor1 extends BoostInterceptor {
+  @override
+  void onPrePush(BoostInterceptorOption option, PushInterceptorHandler handler) {
+    Logger.log('CustomInterceptor#onPrePush1~~~, $option');
+    // Add extra arguments
+    option.arguments?['CustomInterceptor1'] = "1";
+    super.onPrePush(option, handler);
+  }
+
+  @override
+  void onPostPush(BoostInterceptorOption option, PushInterceptorHandler handler) {
+    Logger.log('CustomInterceptor#onPostPush1~~~, $option');
+    handler.next(option);
+  }
+}
+
+class CustomInterceptor2 extends BoostInterceptor {
+  @override
+  void onPrePush(BoostInterceptorOption option, PushInterceptorHandler handler) {
+    Logger.log('CustomInterceptor#onPrePush2~~~, $option');
+    // Add extra arguments
+    option.arguments?['CustomInterceptor2'] = "2";
+    if (!(option.isFromHost ?? false) && option.name == "interceptor") {
+      handler.resolve(<String, dynamic>{'result': 'xxxx'});
+    } else {
+      handler.next(option);
+    }
+  }
+
+  @override
+  void onPostPush(BoostInterceptorOption option, PushInterceptorHandler handler) {
+    Logger.log('CustomInterceptor#onPostPush2~~~, $option');
+    handler.next(option);
+  }
+}
+
+class CustomInterceptor3 extends BoostInterceptor {
+  @override
+  void onPrePush(BoostInterceptorOption option, PushInterceptorHandler handler) {
+    Logger.log('CustomInterceptor#onPrePush3~~~, $option');
+    // Replace arguments
+    option.arguments = <String, dynamic>{'CustomInterceptor3': '3'};
+    handler.next(option);
+  }
+
+  @override
+  void onPostPush(BoostInterceptorOption option, PushInterceptorHandler handler) {
+    Logger.log('CustomInterceptor#onPostPush3~~~, $option');
+    handler.next(option);
+  }
+}
 
 class MyApp extends StatefulWidget {
   @override
@@ -18,84 +118,311 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  /// 由于很多同学说没有跳转动画，这里是因为之前exmaple里面用的是 [PageRouteBuilder]，
-  /// 其实这里是可以自定义的，和Boost没太多关系，比如我想用类似iOS平台的动画，
-  /// 那么只需要像下面这样写成 [CupertinoPageRoute] 即可
-  /// (这里全写成[MaterialPageRoute]也行，这里只不过用[CupertinoPageRoute]举例子)
-  ///
-  /// 注意，如果需要push的时候，两个页面都需要动的话，
-  /// （就是像iOS native那样，在push的时候，前面一个页面也会向左推一段距离）
-  /// 那么前后两个页面都必须是遵循CupertinoRouteTransitionMixin的路由
-  /// 简单来说，就两个页面都是CupertinoPageRoute就好
-  /// 如果用MaterialPageRoute的话同理
-
-  Map<String, FlutterBoostRouteFactory> routerMap = {
-    'mainPage': (RouteSettings settings, String? uniqueId) {
-      return CupertinoPageRoute(
-          settings: settings,
-          builder: (_) {
-            Map<String, Object> map = settings.arguments as Map<String, Object> ;
-            String data = map['data'] as String;
-            return MainPage(
-              data: data,
-            );
-          });
+  static Map<String, FlutterBoostRouteFactory> routerMap = {
+    // '/': (settings, uniqueId) {
+    //   return PageRouteBuilder<dynamic>(
+    //       settings: settings,
+    //       pageBuilder: (_, __, ___) => Container(),
+    //   );
+    // },
+    'embedded': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+        settings: settings,
+        pageBuilder: (_, __, ___) => EmbeddedFirstRouteWidget(),
+      );
     },
-    'simplePage': (settings, uniqueId) {
-      return CupertinoPageRoute(
+    'presentFlutterPage': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+        settings: settings,
+        pageBuilder: (_, __, ___) => FlutterRouteWidget(
+          params: (settings.arguments ?? {}) as Map<dynamic, dynamic>,
+          message: "",
+          uniqueId: uniqueId ?? "",
+        ),
+      );
+    },
+    'imagepick': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+        settings: settings,
+        pageBuilder: (_, __, ___) => ImagePickerPage(title: "xxx"),
+      );
+    },
+    'interceptor': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+        settings: settings,
+        pageBuilder: (_, __, ___) => ImagePickerPage(title: "interceptor"),
+      );
+    },
+    'firstFirst': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+        settings: settings,
+        pageBuilder: (_, __, ___) => FirstFirstRouteWidget(),
+      );
+    },
+    'willPop': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+        settings: settings,
+        pageBuilder: (_, __, ___) => WillPopRoute(),
+      );
+    },
+    'returnData': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+        settings: settings,
+        pageBuilder: (_, __, ___) => ReturnDataWidget(),
+      );
+    },
+    'transparentWidget': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+        barrierColor: Colors.black12,
+        transitionDuration: const Duration(),
+        reverseTransitionDuration: const Duration(),
+        opaque: false,
+        settings: settings,
+        pageBuilder: (_, __, ___) => TransparentWidget(),
+      );
+    },
+    'radialExpansion': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+        settings: settings,
+        pageBuilder: (_, __, ___) => RadialExpansionDemo(),
+      );
+    },
+    'selectionScreen': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+        settings: settings,
+        pageBuilder: (_, __, ___) => SelectionScreen(),
+      );
+    },
+    'secondStateful': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+        settings: settings,
+        pageBuilder: (_, __, ___) => SecondStatefulRouteWidget(),
+      );
+    },
+    'platformView': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+        settings: settings,
+        pageBuilder: (_, __, ___) => PlatformRouteWidget(),
+      );
+    },
+    'popUntilView': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+        settings: settings,
+        pageBuilder: (_, __, ___) => PopUntilRoute(),
+      );
+    },
+
+    ///可以在 native 层通过 getContainerParams 来传递参数
+    'flutterPage': (settings, uniqueId) {
+      print('flutterPage settings:$settings, uniqueId:$uniqueId');
+      return PageRouteBuilder<dynamic>(
+        settings: settings,
+        pageBuilder: (_, __, ___) => FlutterRouteWidget(
+          params: (settings.arguments ?? {}) as Map<dynamic, dynamic>,
+          message: "",
+          uniqueId: uniqueId ?? "",
+        ),
+        transitionsBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child
+            ) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(1.0, 0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: SlideTransition(
+              position: Tween<Offset>(
+                begin: Offset.zero,
+                end: const Offset(-1.0, 0),
+              ).animate(secondaryAnimation),
+              child: child,
+            ),
+          );
+        },
+      );
+    },
+    'tab_friend': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+        settings: settings,
+        pageBuilder: (_, __, ___) => SimpleWidget(
+          uniqueId,
+          settings.arguments as Map<dynamic, dynamic>?,
+          "This is a flutter fragment",
+        ),
+      );
+    },
+    'tab_message': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
           settings: settings,
-          builder: (_) {
-            Map<String, Object> map = settings.arguments as Map<String, Object>;
-            String data = map['data'] as String;
-            return SimplePage(
-              data: data,
-            );
-          });
+          pageBuilder: (_, __, ___) => SimpleWidget(
+            uniqueId,
+            settings.arguments as Map<dynamic, dynamic>?,
+            "This is a flutter fragment",
+          )
+      );
+    },
+    'tab_flutter1': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+        settings: settings,
+        pageBuilder: (_, __, ___) => SimpleWidget(
+          uniqueId,
+          settings.arguments as Map<dynamic, dynamic>?,
+          "This is a custom FlutterView",
+        ),
+      );
+    },
+    'tab_flutter2': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+        settings: settings,
+        pageBuilder: (_, __, ___) => SimpleWidget(
+          uniqueId,
+          settings.arguments as Map<dynamic, dynamic>?,
+          "This is a custom FlutterView",
+        ),
+      );
+    },
+
+    'f2f_first': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+        settings: settings,
+        pageBuilder: (_, __, ___) => F2FFirstPage(),
+      );
+    },
+    'f2f_second': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+        settings: settings,
+        pageBuilder: (_, __, ___) => F2FSecondPage(),
+      );
+    },
+    'webview': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+        settings: settings,
+        pageBuilder: (_, __, ___) => WebViewExample(),
+      );
+    },
+    'platformview/listview': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+        settings: settings,
+        pageBuilder: (_, __, ___) => PlatformViewPerf(),
+      );
+    },
+    'platformview/animation': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+        settings: settings,
+        pageBuilder: (_, __, ___) => NativeViewExample(),
+      );
+    },
+    'state_restoration': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+        settings: settings,
+        pageBuilder: (_, __, ___) => StateRestorationDemo(),
+      );
+    },
+    'bottom_navigation': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+        settings: settings,
+        pageBuilder: (_, __, ___) => BottomNavigationPage(),
+      );
+    },
+    'system_ui_overlay_style': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+        settings: settings,
+        pageBuilder: (_, __, ___) => SystemUiOverlayStyleDemo(),
+      );
+    },
+    'mediaquery': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+        settings: settings,
+        pageBuilder: (_, __, ___) => MediaQueryRouteWidget(
+          params: settings.arguments as Map<dynamic, dynamic>?,
+          uniqueId: uniqueId,
+        ),
+      );
+    },
+
+    ///使用 BoostCacheWidget 包裹你的页面时，可以解决 push pageA->pageB->pageC 过程中，pageA，pageB 会多次 rebuild 的问题
+    'flutterRebuildDemo': (settings, uniqueId) {
+      return MaterialPageRoute(
+        settings: settings,
+        builder: (ctx) {
+          return BoostCacheWidget(
+            uniqueId: uniqueId ?? "",
+            builder: (_) => FlutterRebuildDemo(),
+          );
+        },
+      );
+    },
+    'flutterRebuildPageA': (settings, uniqueId) {
+      return MaterialPageRoute(
+        settings: settings,
+        builder: (ctx) {
+          return BoostCacheWidget(
+            uniqueId: uniqueId ?? "",
+            builder: (_) => FlutterRebuildPageA(),
+          );
+        },
+      );
+    },
+    'flutterRebuildPageB': (settings, uniqueId) {
+      return MaterialPageRoute(
+        settings: settings,
+        builder: (ctx) {
+          return BoostCacheWidget(
+            uniqueId: uniqueId ?? "",
+            builder: (_) => FlutterRebuildPageB(),
+          );
+        },
+      );
     },
   };
 
   Route<dynamic>? routeFactory(RouteSettings settings, String? uniqueId) {
-    FlutterBoostRouteFactory func = routerMap[settings.name] as FlutterBoostRouteFactory;
+    FlutterBoostRouteFactory? func = routerMap[settings.name!];
+    if (func == null) {
+      return null;
+    }
     return func(settings, uniqueId);
   }
 
-  Widget appBuilder(Widget home) {
-    return MaterialApp(
-      home: home,
-      debugShowCheckedModeBanner: true,
-
-      ///必须加上builder参数，否则showDialog等会出问题
-      builder: (_, __) {
-        return home;
-      },
-    );
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return FlutterBoostApp(
-      routeFactory,
-      appBuilder: appBuilder,
+        routeFactory,
+        interceptors: [
+          CustomInterceptor1(),
+          CustomInterceptor2(),
+          CustomInterceptor3()
+        ]
     );
   }
 }
 
-class MainPage extends StatelessWidget {
-  const MainPage({Object? data});
+class BoostNavigatorObserver extends NavigatorObserver {
   @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Main Page')),
-    );
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    print('boost-didPush' + route.settings.name!);
   }
-}
 
-class SimplePage extends StatelessWidget {
-  const SimplePage({Object? data});
   @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body:  Center(child: Text('SimplePage')),
-    );
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    print('boost-didPop' + route.settings.name!);
+  }
+
+  @override
+  void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    print('boost-didRemove' + route.settings.name!);
+  }
+
+  @override
+  void didStartUserGesture(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    print('boost-didStartUserGesture' + route.settings.name!);
   }
 }
