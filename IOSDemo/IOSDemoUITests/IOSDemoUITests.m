@@ -2,7 +2,7 @@
 //  IOSDemoUITests.m
 //  IOSDemoUITests
 //
-//  Created by comeonflutter on 2022/3/30.
+//  Created by apple on 2022/3/31.
 //
 
 #import <XCTest/XCTest.h>
@@ -31,6 +31,7 @@
     XCUIApplication *app = [[XCUIApplication alloc] init];
     [app launch];
 
+    // Use recording to get started writing UI tests.
     // Use XCTAssert and related functions to verify your tests produce the correct results.
 }
 
