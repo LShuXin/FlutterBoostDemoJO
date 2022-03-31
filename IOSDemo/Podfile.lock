@@ -7,13 +7,7 @@ PODS:
   - FlutterPluginRegistrant (0.0.1):
     - Flutter
     - flutter_boost
-    - image_picker
-    - video_player
     - webview_flutter
-  - image_picker (0.0.1):
-    - Flutter
-  - video_player (0.0.1):
-    - Flutter
   - webview_flutter (0.0.1):
     - Flutter
 
@@ -22,8 +16,6 @@ DEPENDENCIES:
   - flutter_boost (from `../flutter_library/.ios/.symlinks/plugins/flutter_boost/ios`)
   - flutter_library (from `../flutter_library/.ios/Flutter`)
   - FlutterPluginRegistrant (from `../flutter_library/.ios/Flutter/FlutterPluginRegistrant`)
-  - image_picker (from `../flutter_library/.ios/.symlinks/plugins/image_picker/ios`)
-  - video_player (from `../flutter_library/.ios/.symlinks/plugins/video_player/ios`)
   - webview_flutter (from `../flutter_library/.ios/.symlinks/plugins/webview_flutter/ios`)
 
 EXTERNAL SOURCES:
@@ -35,10 +27,6 @@ EXTERNAL SOURCES:
     :path: "../flutter_library/.ios/Flutter"
   FlutterPluginRegistrant:
     :path: "../flutter_library/.ios/Flutter/FlutterPluginRegistrant"
-  image_picker:
-    :path: "../flutter_library/.ios/.symlinks/plugins/image_picker/ios"
-  video_player:
-    :path: "../flutter_library/.ios/.symlinks/plugins/video_player/ios"
   webview_flutter:
     :path: "../flutter_library/.ios/.symlinks/plugins/webview_flutter/ios"
 
@@ -46,9 +34,7 @@ SPEC CHECKSUMS:
   Flutter: bdfa2e8fe0e2880a2c6a58a0b1a8675c262a07af
   flutter_boost: 6a73c54e5654df180c2cc379045b8cba9746fc8a
   flutter_library: f6bfec3df8a4f0cc56ac2240f636531c6c2db337
-  FlutterPluginRegistrant: c304936a3cef6c6a0a9bb3b1d82002e8816b3a96
-  image_picker: e06f7a68f000bd36f552c1847e33cda96ed31f1f
-  video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
+  FlutterPluginRegistrant: 7667ceecf74d3068260430b800183ecf09fa3a42
   webview_flutter: 3603125dfd3bcbc9d8d418c3f80aeecf331c068b
 
 PODFILE CHECKSUM: 4cb4b27d041feff5c61ca754443a5d515b116b75

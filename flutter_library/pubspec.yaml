@@ -29,8 +29,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_boost:
     path: packages/flutter_boost
-  image_picker: 0.8.3+3
-  video_player: 2.2.3
+  # image_picker: 0.8.3+3
+  # video_player: 2.2.3
   webview_flutter: 2.0.13
 
 dev_dependencies:

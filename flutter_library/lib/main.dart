@@ -141,18 +141,18 @@ class _MyAppState extends State<MyApp> {
         ),
       );
     },
-    'imagepick': (settings, uniqueId) {
-      return PageRouteBuilder<dynamic>(
-        settings: settings,
-        pageBuilder: (_, __, ___) => ImagePickerPage(title: "xxx"),
-      );
-    },
-    'interceptor': (settings, uniqueId) {
-      return PageRouteBuilder<dynamic>(
-        settings: settings,
-        pageBuilder: (_, __, ___) => ImagePickerPage(title: "interceptor"),
-      );
-    },
+    // 'imagepick': (settings, uniqueId) {
+    //   return PageRouteBuilder<dynamic>(
+    //     settings: settings,
+    //     pageBuilder: (_, __, ___) => ImagePickerPage(title: "xxx"),
+    //   );
+    // },
+    // 'interceptor': (settings, uniqueId) {
+    //   return PageRouteBuilder<dynamic>(
+    //     settings: settings,
+    //     pageBuilder: (_, __, ___) => ImagePickerPage(title: "interceptor"),
+    //   );
+    // },
     'firstFirst': (settings, uniqueId) {
       return PageRouteBuilder<dynamic>(
         settings: settings,
