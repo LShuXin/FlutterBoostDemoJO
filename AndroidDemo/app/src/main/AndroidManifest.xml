@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.lsx.androiddemo">
 
+    <!-- 这里面会对路由跳转进行代理，主要处理原生和flutter 之间的路由跳转 -->
     <application
         android:name="com.lsx.androiddemo.MyApplication"
         android:allowBackup="true"
@@ -24,6 +25,7 @@
             </intent-filter>
         </activity>
 
+        <!-- 下面这两个 Activity 也是必须的 -->
         <activity
             android:name="io.flutter.embedding.android.FlutterActivity"
             android:theme="@style/Theme.AppCompat"
@@ -43,6 +45,7 @@
 
         </activity>
 
+        <!-- 后面是普通的原生 Activity -->
         <activity
             android:name=".tab.TabMainActivity"
             android:theme="@style/Theme.AppCompat"
@@ -78,6 +81,7 @@
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
             android:windowSoftInputMode="adjustResize"/>
 
+        <!-- 这个 Activity 也比较特别，用于 Flutter 打开透明页面，Flutter 本身可以打开透明页面，但是会使得路由变得混乱 -->
         <activity
             android:name=".TransparencyPageActivity"
             android:theme="@style/TranTheme.Translucente"

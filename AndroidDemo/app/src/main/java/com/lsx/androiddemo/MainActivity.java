@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setContentView(R.layout.native_page);
 
+        // 为原生按钮绑定事件回调
         mOpenNative = findViewById(R.id.open_native);
         mOpenFlutter = findViewById(R.id.open_flutter);
         mOpenFlutterFragment = findViewById(R.id.open_flutter_fragment);
@@ -61,10 +62,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         params.put("string","a string");
         params.put("bool", true);
         params.put("int", 666);
-        //Add some params if needed.
+        // Add some params if needed.
         if (v == mOpenNative) {
+            // 打开一个原生页面
             NativeRouter.openPageByUrl(this, NativeRouter.NATIVE_PAGE_URL, params);
         } else if (v == mOpenFlutter) {
+            // 打开一个名为 flutterPage 的 flutter 页面
             // 这里将参数传给了 flutter
             Intent intent = new FlutterBoostActivity.CachedEngineIntentBuilder(FlutterBoostActivity.class)
                     .backgroundMode(FlutterActivityLaunchConfigs.BackgroundMode.opaque)
@@ -74,8 +77,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .build(this);
             startActivityForResult(intent, REQUEST_CODE);
         } else if (v == mOpenFlutterFragment) {
+            // 打开一个 包含flutter内容的 Fragment
             NativeRouter.openPageByUrl(this, NativeRouter.FLUTTER_FRAGMENT_PAGE_URL, params);
         } else if (v == mOpenCustomViewTab) {
+            // 打开一个 tab 页面
             NativeRouter.openPageByUrl(this, NativeRouter.FLUTTER_CUSTOM_VIEW_URL, params);
         }
     }
