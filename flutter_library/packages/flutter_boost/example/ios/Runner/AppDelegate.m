@@ -74,6 +74,8 @@
     [pushEmbeded addTarget:self action:@selector(pushEmbeded) forControlEvents:UIControlEventTouchUpInside];
     [self.window addSubview:pushEmbeded];
 
+    // 这里的两个按钮始终显示的屏幕上
+
 
     return YES;
 }

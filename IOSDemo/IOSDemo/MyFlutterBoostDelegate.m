@@ -13,14 +13,15 @@
 
 @implementation MyFlutterBoostDelegate
 
-
+// Flutter 中对路由的跳转都会转到这里处理
+// 原生应该根据不同的 pageName 做跳转
+// 这里随便找了个原生页面（UIViewControllerDemo）跳转
 - (void) pushNativeRoute:(NSString *) pageName arguments:(NSDictionary *) arguments {
     BOOL animated = [arguments[@"animated"] boolValue];
     BOOL present= [arguments[@"present"] boolValue];
     UIViewControllerDemo *nvc = [[UIViewControllerDemo alloc] initWithNibName:@"UIViewControllerDemo" bundle:[NSBundle mainBundle]];
     if(present){
-        [self.navigationController presentViewController:nvc animated:animated completion:^{
-        }];
+        [self.navigationController presentViewController:nvc animated:animated completion:^{}];
     }else{
         [self.navigationController pushViewController:nvc animated:animated];
     }
@@ -28,11 +29,13 @@
 
 - (void)pushFlutterRoute:(FlutterBoostRouteOptions *)options {
     FBFlutterViewContainer *vc = FBFlutterViewContainer.new;
+    // 这里透明参数一定要处理，便于 flutter 打开透明页面
+    // 虽然不借助原生 flutter 也可以打开透明页面，但是这种做法会让路由变得混乱
     [vc setName:options.pageName uniqueId:options.uniqueId params:options.arguments opaque:options.opaque];
     
-    //是否伴随动画
+    // 是否伴随动画
     BOOL animated = [options.arguments[@"animated"] boolValue];
-    //是否是present的方式打开,如果要push的页面是透明的，那么也要以present形式打开
+    // 是否是present的方式打开,如果要push的页面是透明的，那么也要以present形式打开
     BOOL present = [options.arguments[@"present"] boolValue] || !options.opaque;
     
     if(present){

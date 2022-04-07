@@ -23,6 +23,7 @@
     // Do any additional setup after loading the view from its nib.
 }
 
+// 该原生页面上第一处跳转
 - (IBAction)pushFlutterPage:(id)sender {
     
     FlutterBoostRouteOptions* options = [[FlutterBoostRouteOptions alloc]init];
@@ -35,6 +36,7 @@
     [[FlutterBoost instance]open:options];
 }
 
+// 该原生页面上第二处跳转
 - (IBAction)present:(id)sender {    
     FlutterBoostRouteOptions* options = [[FlutterBoostRouteOptions alloc]init];
     options.pageName = @"transparentWidget";

@@ -19,6 +19,7 @@
 - (instancetype)init{
     if (self = [super init]) {
         _flutterContainer = [[FBFlutterViewContainer alloc]init];
+        // 这里是其中的一个 flutter 页面
         [_flutterContainer setName:@"embedded" uniqueId:nil params:@{} opaque:YES];
     }
     return self;
@@ -26,17 +27,20 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    // 嵌入一个 Flutter 页面 
     self.view.backgroundColor = [UIColor grayColor];
     self.flutterContainer.view.frame = CGRectInset(self.view.bounds, 30, 100);
     [self.view addSubview:self.flutterContainer.view];
     [self addChildViewController:self.flutterContainer];
     
+    // 在原生页面上添加一个按钮
     UIButton *nativeButton = [UIButton buttonWithType:UIButtonTypeCustom];
     nativeButton.frame = CGRectMake(50,self.view.bounds.size.height-50,200,40);
     nativeButton.backgroundColor = [UIColor blueColor];
     [nativeButton setTitle:@"Button in Native" forState:UIControlStateNormal];
     [nativeButton addTarget:self action:@selector(pushMe) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:nativeButton];
+    // 原生页面上面一个按钮 “Button in Native” + 固定的两个按钮 + 一个 Flutter 页面
 }
 
 - (void)pushMe
@@ -47,12 +51,12 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    //注意这行代码不可缺少
-//    [self.flutterContainer.view setNeedsLayout];
-//    [self.flutterContainer.view layoutIfNeeded];
+    // 注意这行代码不可缺少
+    // [self.flutterContainer.view setNeedsLayout];
+    // [self.flutterContainer.view layoutIfNeeded];
 }
 
-//NOTES: embed情景下必须实现！！！
+// NOTES: embed情景下必须实现！！！
 - (void)didMoveToParentViewController:(UIViewController *)parent {
     [self.flutterContainer didMoveToParentViewController:parent];
     [super didMoveToParentViewController:parent];

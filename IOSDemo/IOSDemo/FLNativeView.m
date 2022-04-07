@@ -1,5 +1,6 @@
 #import "FLNativeView.h"
 
+// 平台 view， 一种特殊的view，可直接在Flutter中使用 
 @implementation FLNativeViewFactory {
   NSObject<FlutterBinaryMessenger>* _messenger;
 }

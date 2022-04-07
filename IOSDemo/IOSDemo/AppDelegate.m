@@ -24,31 +24,37 @@
 {
     self.window = [[UIWindow alloc] initWithFrame: [UIScreen mainScreen].bounds];
     [self.window makeKeyAndVisible];
-    //默认方法
+    // 路由代理
+    // 默认方法
     MyFlutterBoostDelegate* delegate=[[MyFlutterBoostDelegate alloc ] init];
     [[FlutterBoost instance] setup:application delegate:delegate callback:^(FlutterEngine *engine) {
+        // 前面是必须的，否则 flutter 无法跳转原生
+        // mechodChennal  可以在这里注册，用于原生和 Flutter 通信
+        // 下面是可选的，用于注册平台组件
         NSObject<FlutterPluginRegistrar>* registrar = [engine registrarForPlugin:@"plugin-name"];
         FLNativeViewFactory* factory = [[FLNativeViewFactory alloc] initWithMessenger:registrar.messenger];
         [[engine registrarForPlugin:@"<plugin-name>"] registerViewFactory:factory withId:@"<simple-text-view>"];
     } ];
 
-    //下面是自定义option参数的方法
+    // 下面是自定义option参数的方法
 
-//    FlutterBoostSetupOptions* options = [FlutterBoostSetupOptions createDefault];
-//    options.dartEntryPoint = @"main2";
-//
-//    [[FlutterBoost instance] setup:application delegate:delegate callback:^(FlutterEngine *engine) {
-//    } options:options];
+    // FlutterBoostSetupOptions* options = [FlutterBoostSetupOptions createDefault];
+    // options.dartEntryPoint = @"main2";
+    // 
+    // [[FlutterBoost instance] setup:application delegate:delegate callback:^(FlutterEngine *engine) {
+    // } options:options];
 
+    // 一个原生页面 tab 项
     UIViewControllerDemo *vc = [[UIViewControllerDemo alloc] initWithNibName:@"UIViewControllerDemo" bundle:[NSBundle mainBundle]];
     vc.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"hybrid" image:nil tag:0];
 
+    // 一个Flutter 页面tab 项
     FBFlutterViewContainer *fvc = FBFlutterViewContainer.new ;
 
     [fvc setName:@"tab_friend" uniqueId:nil params:@{} opaque:YES];
     fvc.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"flutter_tab" image:nil tag:1];
 
-
+    // 添加这两个 tab
     UITabBarController *tabVC = [[UITabBarController alloc] init];
     tabVC.viewControllers = @[vc,fvc];
 
@@ -60,6 +66,8 @@
 
     self.window.rootViewController = rvc;
 
+
+    // 为主窗口添加两个按钮（注意这两个按钮将始终保留在窗口上方）
     UIButton *nativeButton = [UIButton buttonWithType:UIButtonTypeCustom];
     nativeButton.frame = CGRectMake(self.window.frame.size.width * 0.5 - 50, 200, 100, 40);
     nativeButton.backgroundColor = [UIColor redColor];
@@ -78,13 +86,15 @@
     return YES;
 }
 
+// 打开一个原生页面，页面上2个跳转按钮
 - (void)pushNative
 {
     UINavigationController *nvc = (id)self.window.rootViewController;
     UIViewControllerDemo *vc = [[UIViewControllerDemo alloc] initWithNibName:@"UIViewControllerDemo" bundle:[NSBundle mainBundle]];
     [nvc pushViewController:vc animated:YES];
 }
-//
+
+// 打开另一个原生页面（这个原生页面内嵌一个flutter页面）
 - (void)pushEmbeded
 {
     UINavigationController *nvc = (id)self.window.rootViewController;

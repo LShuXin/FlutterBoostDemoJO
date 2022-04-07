@@ -17,6 +17,7 @@ public class MyFlutterBoostDelegate implements FlutterBoostDelegate {
     public void pushNativeRoute(FlutterBoostRouteOptions options) {
         // 这里拿到的就是原生页面的名字
         // 可根据原生页面的名字以及参数自定义完成跳转
+        // 这里是随便找了个页面 “NativePageActivity”
         Log.i("pushNativeRoute", "======================================================");
         Log.i("pageName:", options.pageName() == null ? "null" : options.pageName());
         Log.i("arguments:", options.arguments() == null ? "null" : options.arguments().toString());
@@ -27,6 +28,7 @@ public class MyFlutterBoostDelegate implements FlutterBoostDelegate {
     @Override
     public void pushFlutterRoute(FlutterBoostRouteOptions options) {
         Log.i("pushFlutterRoute", "======================================================");
+        // 这里处理透明弹窗和普通 flutter 页面跳转
         Class<? extends FlutterBoostActivity> activityClass = options.opaque() ? FlutterBoostActivity.class : TransparencyPageActivity.class;
         Intent intent = new FlutterBoostActivity.CachedEngineIntentBuilder(activityClass)
                 .destroyEngineWithActivity(false)
