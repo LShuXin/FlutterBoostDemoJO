@@ -1,1 +1,9 @@
 .DS_Store
+.idea/
+flutter_library/build/
+flutter_library/.dart_tool/
+flutter_library/.idea/
+flutter_library/.android/
+flutter_library/.ios
+flutter_library/.flutter-plugins
+flutter_library/.flutter-plugins-dependencies
