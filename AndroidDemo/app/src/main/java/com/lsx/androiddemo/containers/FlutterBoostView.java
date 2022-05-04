@@ -201,17 +201,6 @@ public class FlutterBoostView extends LifecycleView implements FlutterViewContai
       return getArguments().getString(ARG_CACHED_ENGINE_ID, FlutterBoost.ENGINE_ID);
     }
 
-    @Nullable
-    @Override
-    public String getDartEntrypointLibraryUri() {
-        return null;
-    }
-
-    @Override
-    public ExclusiveAppComponent<Activity> getExclusiveAppComponent() {
-        return null;
-    }
-
     public void onFlutterUiDisplayed() {
         if (callback != null) {
             callback.onFlutterUiDisplayed();
@@ -237,11 +226,6 @@ public class FlutterBoostView extends LifecycleView implements FlutterViewContai
     @Override
     public void updateSystemUiOverlays() {
 
-    }
-
-    @Override
-    public boolean shouldDispatchAppLifecycleState() {
-        return false;
     }
 
     public String getUrl() {
